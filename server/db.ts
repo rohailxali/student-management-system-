@@ -35,6 +35,7 @@ export async function getDb() {
           ssl: {
             rejectUnauthorized: false
           },
+          connectTimeout: 3000,
           waitForConnections: true,
           connectionLimit: 10,
           maxIdle: 10, 
