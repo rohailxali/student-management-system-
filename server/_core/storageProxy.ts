@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ENV } from "./env";
+import { ENV } from "./env.js";
 
 export function registerStorageProxy(app: any): void {
   app.get("/manus-storage/*", async (req: any, res: any): Promise<any> => {

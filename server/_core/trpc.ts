@@ -1,6 +1,6 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
-import type { TrpcContext } from "./context";
+import type { TrpcContext } from "./context.js";
 
 // These messages were previously imported from @shared/const (Manus-internal package).
 // Inlined here to remove the dependency.

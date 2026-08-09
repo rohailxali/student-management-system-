@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { User } from "../../drizzle/schema";
-import { getUserByOpenId, upsertUser } from "../db";
-import { verifyIdToken } from "./firebaseAdmin";
+import type { User } from "../../drizzle/schema.js";
+import { getUserByOpenId, upsertUser } from "../db.js";
+import { verifyIdToken } from "./firebaseAdmin.js";
 
 export type TrpcContext = {
   req: any;

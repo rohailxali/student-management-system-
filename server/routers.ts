@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import type { TrpcContext } from "./_core/context";
-import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
+import type { TrpcContext } from "./_core/context.js";
+import { systemRouter } from "./_core/systemRouter.js";
+import { publicProcedure, protectedProcedure, router } from "./_core/trpc.js";
 import {
   createRecord,
   createStudent,
@@ -18,13 +18,13 @@ import {
   listStudents,
   logActivity,
   updateStudent,
-} from "./db";
+} from "./db.js";
 import {
   insertRecordSchema,
   insertStudentSchema,
   listStudentsSchema,
   updateStudentSchema,
-} from "../shared/schema";
+} from "../shared/schema.js";
 
 type AdminCtx = NonNullable<TrpcContext["user"]>;
 

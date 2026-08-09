@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { insertStudentSchema, listStudentsSchema } from "../shared/schema";
+import { insertStudentSchema, listStudentsSchema } from "../shared/schema.js";
 
 describe("insertStudentSchema", () => {
   it("validates a correct student payload", () => {
