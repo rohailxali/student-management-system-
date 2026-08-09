@@ -27,7 +27,7 @@ export async function createContext(
       // Upsert the user into the database on every authenticated request
       await upsertUser({
         openId: decoded.uid,
-        name: (decoded["name"] as string | undefined) ?? null,
+        name: decoded.name ?? null,
         email: decoded.email ?? null,
         loginMethod: "google",
         lastSignedIn: Math.floor(Date.now() / 1000),
