@@ -24,32 +24,57 @@ import { ENV } from "./_core/env";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 let _pool: any = null;
+let _dbError: string | null = null;
+
+// Parse DATABASE_URL — supports both mysql:// and mysql2:// schemes.
+function parseDbUrl(rawUrl: string) {
+  const url = new URL(rawUrl.replace(/^mysql2:\/\//, "mysql://"));
+  return {
+    host: url.hostname,
+    port: url.port ? parseInt(url.port, 10) : 3306,
+    user: url.username ? decodeURIComponent(url.username) : undefined,
+    password: url.password ? decodeURIComponent(url.password) : undefined,
+    database: url.pathname.replace(/^\//, "") || undefined,
+  };
+}
 
 // Lazily create the drizzle instance so local tooling can run without a DB.
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
       if (!_pool) {
+        const parsed = parseDbUrl(process.env.DATABASE_URL);
+        console.log(`[Database] Connecting to ${parsed.host}:${parsed.port}/${parsed.database} as ${parsed.user}`);
         _pool = mysql.createPool({
-          uri: process.env.DATABASE_URL,
-          ssl: {
-            rejectUnauthorized: false
-          },
-          connectTimeout: 3000,
+          host: parsed.host,
+          port: parsed.port,
+          user: parsed.user,
+          password: parsed.password,
+          database: parsed.database,
+          ssl: { rejectUnauthorized: false },
+          connectTimeout: 5000,
           waitForConnections: true,
-          connectionLimit: 10,
-          maxIdle: 10, 
-          idleTimeout: 60000, 
+          connectionLimit: 5,
           queueLimit: 0,
         });
+        // Eagerly test the connection so we surface errors immediately.
+        const conn = await _pool.getConnection();
+        conn.release();
+        console.log("[Database] Connection test OK");
       }
       _db = drizzle(_pool) as any;
-    } catch (error) {
-      console.warn("[Database] Failed to connect:", error);
+    } catch (error: any) {
+      _dbError = String(error?.message ?? error);
+      console.error("[Database] Failed to connect:", _dbError);
+      _pool = null;
       _db = null;
     }
   }
   return _db;
+}
+
+export function getDbError() {
+  return _dbError;
 }
 
 export async function upsertUser(user: Partial<InsertUser> & Pick<InsertUser, "openId">): Promise<void> {
