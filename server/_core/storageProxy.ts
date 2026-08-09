@@ -1,11 +1,9 @@
-import type { Express, Request, Response } from "express";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ENV } from "./env";
 
-export function registerStorageProxy(app: Express): void {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  app.get("/manus-storage/*", async (req: Request, res: Response): Promise<any> => {
-    // Extract path after /manus-storage/
-    const fullPath = req.path.replace(/^\/manus-storage\//, "");
+export function registerStorageProxy(app: any): void {
+  app.get("/manus-storage/*", async (req: any, res: any): Promise<any> => {
+    const fullPath = (req.path as string).replace(/^\/manus-storage\//, "");
     if (!fullPath) {
       return res.status(400).send("Missing storage key");
     }

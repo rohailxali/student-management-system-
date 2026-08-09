@@ -1,30 +1,28 @@
-import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
-import type { IncomingHttpHeaders } from "http";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { User } from "../../drizzle/schema";
 import { getUserByOpenId, upsertUser } from "../db";
 import { verifyIdToken } from "./firebaseAdmin";
 
 export type TrpcContext = {
-  req: CreateExpressContextOptions["req"];
-  res: CreateExpressContextOptions["res"];
+  req: any;
+  res: any;
   user: User | null;
 };
 
-export async function createContext(
-  opts: CreateExpressContextOptions
-): Promise<TrpcContext> {
+export async function createContext(opts: { req: any; res: any }): Promise<TrpcContext> {
   let user: User | null = null;
 
   // Extract Bearer token from the Authorization header
-  const headers = opts.req.headers as IncomingHttpHeaders;
-  const authHeader = typeof headers.authorization === "string" ? headers.authorization : undefined;
+  const authHeader: string | undefined =
+    typeof opts.req?.headers?.authorization === "string"
+      ? opts.req.headers.authorization
+      : undefined;
 
   if (authHeader?.startsWith("Bearer ")) {
     const idToken = authHeader.slice(7);
     const decoded = await verifyIdToken(idToken);
 
     if (decoded) {
-      // Upsert the user into the database on every authenticated request
       await upsertUser({
         openId: decoded.uid,
         name: decoded.name ?? null,
