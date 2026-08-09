@@ -50,13 +50,13 @@ function GeoAccents() {
 }
 
 export default function ScholarlyLayout({ children }: { children: React.ReactNode }) {
-  const { loading, user } = useAuth();
+  const { loading, user, isAuthenticated } = useAuth();
 
   if (loading) {
     return <DashboardLayoutSkeleton />;
   }
 
-  if (!user) {
+  if (!isAuthenticated) {
     return (
       <div className="relative min-h-screen overflow-hidden bg-background">
         <span className="geo-shape -top-24 -left-24 h-80 w-80 bg-[oklch(0.85_0.06_255)]/60" aria-hidden="true" />
