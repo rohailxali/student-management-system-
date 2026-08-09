@@ -103,7 +103,7 @@ function ScholarlyLayoutContent({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <Sidebar className="border-r border-sidebar-border bg-sidebar">
+      <Sidebar collapsible="icon" className="border-r border-sidebar-border bg-sidebar">
         <SidebarHeader className="h-16 justify-center">
           <div className="flex items-center gap-3 px-2 w-full">
             <button

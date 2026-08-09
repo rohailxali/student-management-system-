@@ -32,6 +32,9 @@ export async function getDb() {
       if (!_pool) {
         _pool = mysql.createPool({
           uri: process.env.DATABASE_URL,
+          ssl: {
+            rejectUnauthorized: false
+          },
           waitForConnections: true,
           connectionLimit: 10,
           maxIdle: 10, 
