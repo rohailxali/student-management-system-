@@ -1,5 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { AlertCircle, CheckCircle2, ChevronRight, XCircle, Box } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 /* ------------------------------------------------------------------ */
@@ -89,16 +90,17 @@ export function EmptyState({
   title,
   description,
   action,
+  icon: Icon = Box,
 }: {
   title: string;
   description: string;
   action?: React.ReactNode;
+  icon?: React.ElementType;
 }) {
   return (
-    <div className="rise-in flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-border bg-card/60 px-8 py-16 text-center">
-      <div className="flex items-center gap-2">
-        <span className="h-8 w-8 rounded-full bg-[oklch(0.85_0.06_255)]/70" aria-hidden="true" />
-        <span className="h-4 w-4 rounded-full bg-[oklch(0.85_0.07_20)]/80" aria-hidden="true" />
+    <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-center p-8">
+      <div className="flex shrink-0 items-center justify-center p-4 rounded-full bg-secondary/50 mb-2">
+        <Icon className="h-8 w-8 text-muted-foreground" aria-hidden="true" />
       </div>
       <h3 className="text-base font-semibold tracking-tight">{title}</h3>
       <p className="max-w-sm text-sm font-light text-muted-foreground">{description}</p>

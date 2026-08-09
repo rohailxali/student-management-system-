@@ -9,6 +9,7 @@ import {
   sql,
 } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
+import mysql from "mysql2/promise";
 import {
   academicRecords,
   activityLog,
@@ -22,12 +23,23 @@ import {
 import { ENV } from "./_core/env";
 
 let _db: ReturnType<typeof drizzle> | null = null;
+let _pool: any = null;
 
 // Lazily create the drizzle instance so local tooling can run without a DB.
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
-      _db = drizzle(process.env.DATABASE_URL);
+      if (!_pool) {
+        _pool = mysql.createPool({
+          uri: process.env.DATABASE_URL,
+          waitForConnections: true,
+          connectionLimit: 10,
+          maxIdle: 10, 
+          idleTimeout: 60000, 
+          queueLimit: 0,
+        });
+      }
+      _db = drizzle(_pool) as any;
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
       _db = null;
